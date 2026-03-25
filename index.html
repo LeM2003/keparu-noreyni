@@ -8,7 +8,7 @@
   <!-- Open Graph -->
   <meta property="og:title" content="Képaru Noreyni — Chicory, Sénégal">
   <meta property="og:description" content="From Chicory to the world. DROP 01 : Chicory Origins. Streetwear né à Chicory, Sénégal.">
-  <meta property="og:image" content="https://lem2003.github.io/keparu-noreyni/images/Logo .jpeg">
+  <meta property="og:image" content="https://lem2003.github.io/keparu-noreyni/images/Logo%20.jpeg">
   <meta property="og:url" content="https://lem2003.github.io/keparu-noreyni/">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
@@ -428,7 +428,7 @@
 
     .produits-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 2rem;
     }
 
@@ -1240,7 +1240,17 @@
         gap: 2rem;
       }
 
-      .histoire-visual { display: none; }
+      .histoire-visual {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .histoire-visual svg { display: none; }
+
+      .produits-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
     @media (max-width: 768px) {
@@ -1705,8 +1715,7 @@
 <footer>
   <div class="footer-inner">
     <div class="footer-logo">
-      <div class="logo-text">Képaru Noreyni</div>
-      <div class="logo-sub">Chicory — Sénégal · Drop 01</div>
+      <img src="images/Logo .jpeg" alt="Képaru Noreyni" style="height:44px;width:auto;object-fit:contain;">
     </div>
 
     <div class="footer-social">
@@ -1768,12 +1777,26 @@ const WA_NUMBER = '221787660827';
 
 /* ===== CONFIG ADMIN — NE PAS PARTAGER ===== */
 const ADMIN_PASSWORD = 'Mouhadiouf71';
+const PRODUCTS = ['noir','blanc','blanc2'];
+const PRODUCT_NAMES = { noir:'T-Shirt Noir', blanc:'T-Shirt Blanc', blanc2:'T-Shirt Blanc 2' };
 
-/* Stock limité par produit — géré via le panneau admin */
-let STOCK = JSON.parse(localStorage.getItem('kn_stock') || '{"noir":false,"blanc":false,"blanc2":false}');
+let STOCK    = JSON.parse(localStorage.getItem('kn_stock')   || '{"noir":false,"blanc":false,"blanc2":false}');
+let PRICES   = JSON.parse(localStorage.getItem('kn_prices')  || '{"noir":10000,"blanc":10000,"blanc2":10000}');
+let HIDDEN   = JSON.parse(localStorage.getItem('kn_hidden')  || '{"noir":false,"blanc":false,"blanc2":false}');
+let BAN_TEXT = localStorage.getItem('kn_banniere') || 'Livraison partout au Sénégal \u00b7 Paiement Wave & Orange Money';
+let CLOSED   = JSON.parse(localStorage.getItem('kn_closed')  || '{"active":false,"message":"Boutique temporairement ferm\u00e9e \u2014 Revenez bient\u00f4t !"}');
+let ORDER_COUNT = parseInt(localStorage.getItem('kn_orders') || '0');
+
+function saveAll() {
+  localStorage.setItem('kn_stock',    JSON.stringify(STOCK));
+  localStorage.setItem('kn_prices',   JSON.stringify(PRICES));
+  localStorage.setItem('kn_hidden',   JSON.stringify(HIDDEN));
+  localStorage.setItem('kn_banniere', BAN_TEXT);
+  localStorage.setItem('kn_closed',   JSON.stringify(CLOSED));
+}
 
 function applyStockBadges() {
-  ['noir','blanc','blanc2'].forEach(id => {
+  PRODUCTS.forEach(id => {
     const card = document.getElementById('product-' + id);
     if (!card) return;
     let badge = card.querySelector('.stock-badge');
@@ -1781,13 +1804,50 @@ function applyStockBadges() {
       if (!badge) {
         badge = document.createElement('span');
         badge.className = 'stock-badge';
-        badge.textContent = 'Stock limité';
+        badge.textContent = 'Stock limit\u00e9';
         card.querySelector('.product-img-wrap').appendChild(badge);
       }
-    } else {
-      if (badge) badge.remove();
-    }
+    } else { if (badge) badge.remove(); }
   });
+}
+
+function applyPrices() {
+  PRODUCTS.forEach(id => {
+    const card = document.getElementById('product-' + id);
+    if (!card) return;
+    const el = card.querySelector('.product-price');
+    if (el) el.innerHTML = fmt(PRICES[id]) + ' <small>FCFA</small>';
+  });
+}
+
+function applyHidden() {
+  PRODUCTS.forEach(id => {
+    const card = document.getElementById('product-' + id);
+    if (card) card.style.display = HIDDEN[id] ? 'none' : '';
+  });
+}
+
+function applyBanniere() {
+  const el = document.querySelector('.banniere-inner');
+  if (el) el.textContent = BAN_TEXT + ' \u00b7 ' + BAN_TEXT;
+}
+
+function applyClosed() {
+  let overlay = document.getElementById('closed-overlay');
+  if (CLOSED.active) {
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'closed-overlay';
+      overlay.style.cssText = 'position:fixed;inset:0;background:rgba(13,13,13,0.97);z-index:8000;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;font-family:Montserrat,sans-serif;';
+      overlay.innerHTML = '<img src="images/Logo .jpeg" style="height:80px;margin-bottom:2rem;filter:drop-shadow(0 4px 20px rgba(204,17,17,0.4));">'
+        + '<p style="font-size:1.5rem;font-family:\'Dancing Script\',cursive;color:#f5f0eb;margin-bottom:1rem;">' + CLOSED.message + '</p>'
+        + '<p style="font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:#CC1111;">K\u00e9paru Noreyni \u2014 Chicory, S\u00e9n\u00e9gal</p>';
+      document.body.appendChild(overlay);
+      document.body.style.overflow = 'hidden';
+    }
+  } else {
+    if (overlay) { overlay.remove(); document.body.style.overflow = ''; }
+  }
 }
 
 function openAdmin() {
@@ -1795,35 +1855,79 @@ function openAdmin() {
   const pwd = prompt('Mot de passe admin :');
   if (pwd !== ADMIN_PASSWORD) { alert('Mot de passe incorrect.'); window.location.hash = ''; return; }
 
+  STOCK   = JSON.parse(localStorage.getItem('kn_stock')   || '{"noir":false,"blanc":false,"blanc2":false}');
+  PRICES  = JSON.parse(localStorage.getItem('kn_prices')  || '{"noir":10000,"blanc":10000,"blanc2":10000}');
+  HIDDEN  = JSON.parse(localStorage.getItem('kn_hidden')  || '{"noir":false,"blanc":false,"blanc2":false}');
+  BAN_TEXT = localStorage.getItem('kn_banniere') || 'Livraison partout au S\u00e9n\u00e9gal \u00b7 Paiement Wave & Orange Money';
+  CLOSED  = JSON.parse(localStorage.getItem('kn_closed')  || '{"active":false,"message":"Boutique temporairement ferm\u00e9e \u2014 Revenez bient\u00f4t !"}');
+  ORDER_COUNT = parseInt(localStorage.getItem('kn_orders') || '0');
+
   const panel = document.createElement('div');
   panel.id = 'admin-panel';
-  panel.innerHTML = `
-    <div style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:9999;display:flex;align-items:center;justify-content:center;">
-      <div style="background:#1a1a1a;border:1px solid #CC1111;border-radius:12px;padding:2rem;min-width:320px;font-family:Montserrat,sans-serif;color:#f5f0eb;">
-        <h2 style="color:#CC1111;margin-bottom:1.5rem;font-size:1.1rem;letter-spacing:0.1em;">PANNEAU ADMIN</h2>
-        <p style="font-size:0.75rem;color:#888;margin-bottom:1.5rem;">Gestion du stock limité</p>
-        ${['noir','blanc','blanc2'].map(id => `
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;padding:0.75rem 1rem;background:#111;border-radius:8px;">
-            <span style="font-size:0.85rem;text-transform:capitalize;">T-Shirt ${id === 'blanc2' ? 'Blanc 2' : id.charAt(0).toUpperCase()+id.slice(1)}</span>
-            <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
-              <input type="checkbox" id="admin-${id}" ${STOCK[id]?'checked':''} onchange="toggleStock('${id}',this.checked)" style="width:18px;height:18px;accent-color:#CC1111;">
-              <span style="font-size:0.75rem;color:#888;">Stock limité</span>
-            </label>
-          </div>`).join('')}
-        <button onclick="document.getElementById('admin-panel').remove();window.location.hash='';" style="margin-top:1rem;width:100%;padding:0.75rem;background:#CC1111;color:white;border:none;border-radius:6px;font-size:0.85rem;font-weight:600;cursor:pointer;letter-spacing:0.05em;">Fermer</button>
+  panel.innerHTML = `<div style="position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:9999;overflow-y:auto;display:flex;align-items:flex-start;justify-content:center;padding:2rem 1rem;">
+    <div style="background:#1a1a1a;border:1px solid #CC1111;border-radius:12px;padding:2rem;width:100%;max-width:460px;font-family:Montserrat,sans-serif;color:#f5f0eb;margin:auto;">
+      <h2 style="color:#CC1111;margin-bottom:0.25rem;font-size:1.1rem;letter-spacing:0.1em;">PANNEAU ADMIN</h2>
+      <p style="font-size:0.65rem;color:#444;margin-bottom:2rem;letter-spacing:0.1em;text-transform:uppercase;">K\u00e9paru Noreyni — Gestion du site</p>
+
+      <div style="background:#111;border-radius:8px;padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;">
+        <div><div style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#666;margin-bottom:0.3rem;">Commandes initi\u00e9es</div>
+        <div style="font-size:2rem;font-weight:800;color:#CC1111;" id="adm-count">${ORDER_COUNT}</div></div>
+        <button onclick="ORDER_COUNT=0;localStorage.setItem('kn_orders','0');document.getElementById('adm-count').textContent='0';" style="padding:0.5rem 0.9rem;background:transparent;border:1px solid #333;color:#666;border-radius:6px;font-size:0.7rem;cursor:pointer;">R\u00e9initialiser</button>
       </div>
-    </div>`;
+
+      <div style="margin-bottom:1.5rem;">
+        <div style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#666;margin-bottom:0.75rem;">Stock limit\u00e9</div>
+        ${PRODUCTS.map(id => `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;padding:0.7rem 1rem;background:#111;border-radius:8px;">
+          <span style="font-size:0.85rem;">${PRODUCT_NAMES[id]}</span>
+          <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
+            <input type="checkbox" ${STOCK[id]?'checked':''} onchange="STOCK['${id}']=this.checked;saveAll();applyStockBadges();" style="width:17px;height:17px;accent-color:#CC1111;">
+            <span style="font-size:0.72rem;color:#666;">Activer</span>
+          </label></div>`).join('')}
+      </div>
+
+      <div style="margin-bottom:1.5rem;">
+        <div style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#666;margin-bottom:0.75rem;">Prix (FCFA)</div>
+        ${PRODUCTS.map(id => `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;padding:0.7rem 1rem;background:#111;border-radius:8px;">
+          <span style="font-size:0.85rem;">${PRODUCT_NAMES[id]}</span>
+          <input type="number" value="${PRICES[id]}" min="0" step="500" onchange="PRICES['${id}']=parseInt(this.value)||0;saveAll();applyPrices();" style="width:110px;padding:0.4rem 0.6rem;background:#0d0d0d;border:1px solid #333;color:#f5f0eb;border-radius:6px;font-size:0.85rem;text-align:right;"></div>`).join('')}
+      </div>
+
+      <div style="margin-bottom:1.5rem;">
+        <div style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#666;margin-bottom:0.75rem;">Visibilit\u00e9 des produits</div>
+        ${PRODUCTS.map(id => `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;padding:0.7rem 1rem;background:#111;border-radius:8px;">
+          <span style="font-size:0.85rem;">${PRODUCT_NAMES[id]}</span>
+          <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
+            <input type="checkbox" ${!HIDDEN[id]?'checked':''} onchange="HIDDEN['${id}']=!this.checked;saveAll();applyHidden();" style="width:17px;height:17px;accent-color:#CC1111;">
+            <span style="font-size:0.72rem;color:#666;">Visible</span>
+          </label></div>`).join('')}
+      </div>
+
+      <div style="margin-bottom:1.5rem;">
+        <div style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#666;margin-bottom:0.75rem;">Texte de la banni\u00e8re</div>
+        <input type="text" id="adm-ban" value="${BAN_TEXT}" style="width:100%;padding:0.7rem;background:#111;border:1px solid #333;color:#f5f0eb;border-radius:8px;font-size:0.8rem;margin-bottom:0.4rem;">
+        <button onclick="BAN_TEXT=document.getElementById('adm-ban').value;saveAll();applyBanniere();" style="width:100%;padding:0.5rem;background:#333;border:none;color:#f5f0eb;border-radius:6px;font-size:0.75rem;cursor:pointer;">Appliquer</button>
+      </div>
+
+      <div style="margin-bottom:2rem;">
+        <div style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#666;margin-bottom:0.75rem;">Mode boutique ferm\u00e9e</div>
+        <div style="padding:1rem;background:#111;border-radius:8px;">
+          <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;margin-bottom:0.75rem;">
+            <input type="checkbox" id="adm-closed" ${CLOSED.active?'checked':''} onchange="CLOSED.active=this.checked;saveAll();applyClosed();" style="width:17px;height:17px;accent-color:#CC1111;">
+            <span style="font-size:0.85rem;">Activer</span>
+          </label>
+          <input type="text" id="adm-closed-msg" value="${CLOSED.message}" style="width:100%;padding:0.6rem;background:#0d0d0d;border:1px solid #333;color:#f5f0eb;border-radius:6px;font-size:0.8rem;margin-bottom:0.4rem;">
+          <button onclick="CLOSED.message=document.getElementById('adm-closed-msg').value;saveAll();applyClosed();" style="width:100%;padding:0.5rem;background:#333;border:none;color:#f5f0eb;border-radius:6px;font-size:0.75rem;cursor:pointer;">Appliquer le message</button>
+        </div>
+      </div>
+
+      <button onclick="document.getElementById('admin-panel').remove();window.location.hash='';" style="width:100%;padding:0.9rem;background:#CC1111;color:white;border:none;border-radius:8px;font-size:0.85rem;font-weight:700;cursor:pointer;letter-spacing:0.08em;">Fermer le panneau</button>
+    </div>
+  </div>`;
   document.body.appendChild(panel);
 }
 
-function toggleStock(id, val) {
-  STOCK[id] = val;
-  localStorage.setItem('kn_stock', JSON.stringify(STOCK));
-  applyStockBadges();
-}
-
 window.addEventListener('hashchange', openAdmin);
-window.addEventListener('load', () => { applyStockBadges(); openAdmin(); });
+window.addEventListener('load', () => { applyStockBadges(); applyPrices(); applyHidden(); applyBanniere(); applyClosed(); openAdmin(); });
 
 function fmt(n) {
   return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
@@ -1912,7 +2016,7 @@ function addToCart(productId, productName) {
   if (existing) {
     existing.qty++;
   } else {
-    cart.push({ id: productId, name: productName, size, price: PRICE, qty: 1 });
+    cart.push({ id: productId, name: productName, size, price: PRICES[productId] || PRICE, qty: 1 });
   }
 
   renderCart();
@@ -1931,6 +2035,8 @@ function updateQty(index, delta) {
 
 function orderWhatsApp() {
   if (cart.length === 0) return;
+  ORDER_COUNT++;
+  localStorage.setItem('kn_orders', ORDER_COUNT);
 
   const msg = document.getElementById('cart-message');
   const note = msg ? msg.value.trim() : '';
