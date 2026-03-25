@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Képaru Noreyni — Streetwear de Chicory, Sénégal. DROP 01 : Chicory Origins.">
   <title>Képaru Noreyni — Chicory, Sénégal</title>
+  <!-- Open Graph -->
+  <meta property="og:title" content="Képaru Noreyni — Chicory, Sénégal">
+  <meta property="og:description" content="From Chicory to the world. DROP 01 : Chicory Origins. Streetwear né à Chicory, Sénégal.">
+  <meta property="og:image" content="https://lem2003.github.io/keparu-noreyni/images/Logo .jpeg">
+  <meta property="og:url" content="https://lem2003.github.io/keparu-noreyni/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="images/Logo .jpeg" type="image/jpeg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -468,6 +475,21 @@
 
     .product-card:hover .product-img-front { opacity: 0; }
     .product-card:hover .product-img-back { opacity: 1; }
+
+    .stock-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: #CC1111;
+      color: white;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 4px;
+      z-index: 2;
+    }
 
     .product-img-placeholder {
       width: 100%;
@@ -1699,6 +1721,65 @@
 let cart = [];
 const PRICE = 10000;
 const WA_NUMBER = '221787660827';
+
+/* ===== CONFIG ADMIN — NE PAS PARTAGER ===== */
+const ADMIN_PASSWORD = 'Mouhadiouf71';
+
+/* Stock limité par produit — géré via le panneau admin */
+let STOCK = JSON.parse(localStorage.getItem('kn_stock') || '{"noir":false,"blanc":false,"blanc2":false}');
+
+function applyStockBadges() {
+  ['noir','blanc','blanc2'].forEach(id => {
+    const card = document.getElementById('product-' + id);
+    if (!card) return;
+    let badge = card.querySelector('.stock-badge');
+    if (STOCK[id]) {
+      if (!badge) {
+        badge = document.createElement('span');
+        badge.className = 'stock-badge';
+        badge.textContent = 'Stock limité';
+        card.querySelector('.product-img-wrap').appendChild(badge);
+      }
+    } else {
+      if (badge) badge.remove();
+    }
+  });
+}
+
+function openAdmin() {
+  if (window.location.hash !== '#admin') return;
+  const pwd = prompt('Mot de passe admin :');
+  if (pwd !== ADMIN_PASSWORD) { alert('Mot de passe incorrect.'); window.location.hash = ''; return; }
+
+  const panel = document.createElement('div');
+  panel.id = 'admin-panel';
+  panel.innerHTML = `
+    <div style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:9999;display:flex;align-items:center;justify-content:center;">
+      <div style="background:#1a1a1a;border:1px solid #CC1111;border-radius:12px;padding:2rem;min-width:320px;font-family:Montserrat,sans-serif;color:#f5f0eb;">
+        <h2 style="color:#CC1111;margin-bottom:1.5rem;font-size:1.1rem;letter-spacing:0.1em;">PANNEAU ADMIN</h2>
+        <p style="font-size:0.75rem;color:#888;margin-bottom:1.5rem;">Gestion du stock limité</p>
+        ${['noir','blanc','blanc2'].map(id => `
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;padding:0.75rem 1rem;background:#111;border-radius:8px;">
+            <span style="font-size:0.85rem;text-transform:capitalize;">T-Shirt ${id === 'blanc2' ? 'Blanc 2' : id.charAt(0).toUpperCase()+id.slice(1)}</span>
+            <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
+              <input type="checkbox" id="admin-${id}" ${STOCK[id]?'checked':''} onchange="toggleStock('${id}',this.checked)" style="width:18px;height:18px;accent-color:#CC1111;">
+              <span style="font-size:0.75rem;color:#888;">Stock limité</span>
+            </label>
+          </div>`).join('')}
+        <button onclick="document.getElementById('admin-panel').remove();window.location.hash='';" style="margin-top:1rem;width:100%;padding:0.75rem;background:#CC1111;color:white;border:none;border-radius:6px;font-size:0.85rem;font-weight:600;cursor:pointer;letter-spacing:0.05em;">Fermer</button>
+      </div>
+    </div>`;
+  document.body.appendChild(panel);
+}
+
+function toggleStock(id, val) {
+  STOCK[id] = val;
+  localStorage.setItem('kn_stock', JSON.stringify(STOCK));
+  applyStockBadges();
+}
+
+window.addEventListener('hashchange', openAdmin);
+window.addEventListener('load', () => { applyStockBadges(); openAdmin(); });
 
 function fmt(n) {
   return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
