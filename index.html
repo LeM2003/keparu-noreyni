@@ -1,0 +1,1839 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Képaru Noreyni — Streetwear de Chicory, Sénégal. DROP 01 : Chicory Origins.">
+  <title>Képaru Noreyni — Chicory, Sénégal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --rouge: #CC1111;
+      --rouge-dark: #a00d0d;
+      --noir: #0d0d0d;
+      --noir-2: #1a1a1a;
+      --creme: #f5f0eb;
+      --creme-2: #e8e0d5;
+      --gris: #888;
+      --font-logo: 'Dancing Script', cursive;
+      --font-text: 'Montserrat', sans-serif;
+      --transition: 0.3s ease;
+      --shadow: 0 4px 20px rgba(0,0,0,0.3);
+      --radius: 8px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-text);
+      background: var(--noir);
+      color: var(--creme);
+      overflow-x: hidden;
+    }
+
+    img { max-width: 100%; display: block; }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; border: none; background: none; font-family: var(--font-text); }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--noir); }
+    ::-webkit-scrollbar-thumb { background: var(--rouge); border-radius: 3px; }
+
+    /* ===== HEADER ===== */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 70px;
+      background: rgba(13,13,13,0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(204,17,17,0.2);
+      transition: var(--transition);
+    }
+
+    .header.scrolled {
+      background: rgba(13,13,13,0.98);
+      border-bottom-color: rgba(204,17,17,0.4);
+    }
+
+    .header-logo {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header-logo .logo-text {
+      font-family: var(--font-logo);
+      font-size: 1.8rem;
+      color: var(--rouge);
+      line-height: 1;
+    }
+
+    .header-logo .logo-sub {
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      color: var(--gris);
+      text-transform: uppercase;
+    }
+
+    .nav {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav a {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--creme-2);
+      transition: var(--transition);
+      position: relative;
+      padding-bottom: 2px;
+    }
+
+    .nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--rouge);
+      transition: var(--transition);
+    }
+
+    .nav a:hover, .nav a.active {
+      color: var(--rouge);
+    }
+
+    .nav a:hover::after, .nav a.active::after {
+      width: 100%;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .cart-btn {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--rouge);
+      border-radius: 4px;
+      color: var(--creme);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: var(--transition);
+    }
+
+    .cart-btn:hover {
+      background: var(--rouge);
+    }
+
+    .cart-icon {
+      width: 18px;
+      height: 18px;
+    }
+
+    #cart-count {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: var(--rouge);
+      color: white;
+      font-size: 0.65rem;
+      font-weight: 700;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: scale(0);
+      transition: var(--transition);
+    }
+
+    #cart-count.visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      padding: 8px;
+    }
+
+    .hamburger span {
+      width: 24px;
+      height: 2px;
+      background: var(--creme);
+      transition: var(--transition);
+      display: block;
+    }
+
+    .hamburger.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Mobile Nav */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top: 70px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--noir);
+      z-index: 999;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2.5rem;
+    }
+
+    .mobile-nav.open { display: flex; }
+
+    .mobile-nav a {
+      font-family: var(--font-logo);
+      font-size: 2.5rem;
+      color: var(--creme);
+      transition: var(--transition);
+    }
+
+    .mobile-nav a:hover { color: var(--rouge); }
+
+    /* ===== HERO ===== */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 2rem 2rem;
+      overflow: hidden;
+      background: linear-gradient(160deg, #1a0a00 0%, #0d0d0d 30%, #1a0500 60%, #2d0800 100%);
+    }
+
+    .hero-damier {
+      position: absolute;
+      inset: 0;
+      opacity: 0.06;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect width='20' height='20' fill='%23CC1111'/%3E%3Crect x='20' y='20' width='20' height='20' fill='%23CC1111'/%3E%3C/svg%3E");
+      background-size: 40px 40px;
+    }
+
+    .hero-damier::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 70% at 50% 50%, transparent 30%, var(--noir) 100%);
+    }
+
+    .hero-glow {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(204,17,17,0.15) 0%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--rouge);
+      border: 1px solid rgba(204,17,17,0.4);
+      padding: 0.4rem 1rem;
+      border-radius: 2px;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-title {
+      font-family: var(--font-logo);
+      font-size: clamp(4rem, 12vw, 9rem);
+      line-height: 0.9;
+      color: var(--creme);
+      margin-bottom: 1rem;
+      text-shadow: 0 0 40px rgba(204,17,17,0.3);
+    }
+
+    .hero-tagline {
+      font-size: clamp(0.85rem, 2vw, 1.1rem);
+      font-weight: 300;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--creme-2);
+      opacity: 0.7;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--rouge);
+      color: white;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 1rem 2.5rem;
+      border-radius: 4px;
+      transition: var(--transition);
+      box-shadow: 0 0 30px rgba(204,17,17,0.4);
+    }
+
+    .hero-cta:hover {
+      background: var(--rouge-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 0 40px rgba(204,17,17,0.6);
+    }
+
+    .hero-cta svg { width: 18px; height: 18px; }
+
+    .hero-badges {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(245,240,235,0.1);
+    }
+
+    .hero-badge {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gris);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .hero-badge span { color: var(--rouge); font-size: 1.2em; }
+
+    /* ===== SECTIONS COMMON ===== */
+    .section {
+      padding: 5rem 2rem;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-tag {
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--rouge);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .section-title {
+      font-family: var(--font-logo);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+
+    .section-sub {
+      font-size: 0.85rem;
+      color: var(--gris);
+      line-height: 1.7;
+      max-width: 500px;
+    }
+
+    /* ===== FADE-IN ANIMATION ===== */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===== PRODUCTS ===== */
+    .section-produits {
+      background: #111;
+    }
+
+    .produits-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .drop-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(204,17,17,0.1);
+      border: 1px solid rgba(204,17,17,0.3);
+      color: var(--rouge);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 0.4rem 1rem;
+      border-radius: 2px;
+      margin-bottom: 1rem;
+    }
+
+    .produits-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+    }
+
+    .product-card {
+      background: var(--noir-2);
+      border: 1px solid rgba(245,240,235,0.08);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: var(--transition);
+    }
+
+    .product-card:hover {
+      border-color: rgba(204,17,17,0.4);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+    }
+
+    /* Image flip */
+    .product-img-wrap {
+      position: relative;
+      aspect-ratio: 4/3;
+      background: #1a1a1a;
+      overflow: hidden;
+    }
+
+    .product-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: opacity 0.4s ease;
+    }
+
+    .product-img-front,
+    .product-img-back {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: opacity 0.4s ease;
+    }
+
+    .product-img-back { opacity: 0; }
+
+    .product-card:hover .product-img-front { opacity: 0; }
+    .product-card:hover .product-img-back { opacity: 1; }
+
+    .product-img-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-logo);
+      font-size: 1.2rem;
+      color: var(--gris);
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .flip-hint {
+      position: absolute;
+      bottom: 0.75rem;
+      right: 0.75rem;
+      background: rgba(0,0,0,0.7);
+      color: var(--gris);
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.6rem;
+      border-radius: 3px;
+      backdrop-filter: blur(4px);
+    }
+
+    .product-info {
+      padding: 1.5rem;
+    }
+
+    .product-name {
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.25rem;
+    }
+
+    .product-desc {
+      font-size: 0.75rem;
+      color: var(--gris);
+      margin-bottom: 1rem;
+    }
+
+    .size-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gris);
+      margin-bottom: 0.5rem;
+    }
+
+    .size-btns {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.25rem;
+    }
+
+    .size-btn {
+      width: 40px;
+      height: 40px;
+      border: 1px solid rgba(245,240,235,0.2);
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--creme-2);
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .size-btn:hover {
+      border-color: var(--rouge);
+      color: var(--rouge);
+    }
+
+    .size-btn.selected {
+      background: var(--rouge);
+      border-color: var(--rouge);
+      color: white;
+    }
+
+    .product-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .product-price {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--creme);
+    }
+
+    .product-price small {
+      font-size: 0.65rem;
+      font-weight: 400;
+      color: var(--gris);
+      letter-spacing: 0.1em;
+    }
+
+    .add-btn {
+      background: var(--rouge);
+      color: white;
+      font-weight: 700;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.75rem 1.25rem;
+      border-radius: 4px;
+      transition: var(--transition);
+    }
+
+    .add-btn:hover {
+      background: var(--rouge-dark);
+      transform: scale(1.02);
+    }
+
+    .add-btn.shake {
+      animation: shake 0.4s ease;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-5px); }
+      40% { transform: translateX(5px); }
+      60% { transform: translateX(-3px); }
+      80% { transform: translateX(3px); }
+    }
+
+    /* ===== HISTOIRE ===== */
+    .section-histoire {
+      background: var(--noir);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .histoire-damier {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 300px;
+      height: 300px;
+      opacity: 0.05;
+    }
+
+    .histoire-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .histoire-text p {
+      font-size: 0.9rem;
+      line-height: 1.9;
+      color: rgba(245,240,235,0.75);
+      margin-bottom: 1rem;
+    }
+
+    .histoire-quote {
+      border-left: 3px solid var(--rouge);
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+      background: rgba(204,17,17,0.05);
+      border-radius: 0 var(--radius) var(--radius) 0;
+    }
+
+    .histoire-quote p {
+      font-family: var(--font-logo);
+      font-size: 1.5rem;
+      color: var(--creme);
+      line-height: 1.4;
+      font-style: italic;
+    }
+
+    .histoire-quote cite {
+      display: block;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--rouge);
+      margin-top: 0.75rem;
+    }
+
+    .histoire-visual {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .damier-deco {
+      width: 100%;
+      max-width: 320px;
+    }
+
+    /* ===== COMMENT COMMANDER ===== */
+    .section-commander {
+      background: #111;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-top: 3rem;
+      margin-bottom: 3rem;
+    }
+
+    .step {
+      text-align: center;
+      padding: 2rem 1rem;
+      background: var(--noir-2);
+      border-radius: var(--radius);
+      border: 1px solid rgba(245,240,235,0.06);
+      position: relative;
+    }
+
+    .step::after {
+      content: '→';
+      position: absolute;
+      top: 50%;
+      right: -1rem;
+      transform: translateY(-50%);
+      color: var(--rouge);
+      font-size: 1.2rem;
+    }
+
+    .step:last-child::after { display: none; }
+
+    .step-num {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(204,17,17,0.1);
+      border: 1px solid rgba(204,17,17,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+    }
+
+    .step-num svg {
+      width: 22px;
+      height: 22px;
+      color: var(--rouge);
+    }
+
+    .step h3 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.4rem;
+    }
+
+    .step p {
+      font-size: 0.72rem;
+      color: var(--gris);
+      line-height: 1.5;
+    }
+
+    .paiement-section {
+      text-align: center;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(245,240,235,0.08);
+    }
+
+    .paiement-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gris);
+      margin-bottom: 1rem;
+    }
+
+    .paiement-badges {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .paiement-badge {
+      padding: 0.5rem 1.25rem;
+      border: 1px solid rgba(245,240,235,0.15);
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--creme-2);
+      background: var(--noir-2);
+    }
+
+    /* ===== CONTACT ===== */
+    .section-contact {
+      background: var(--noir);
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      margin-top: 2rem;
+    }
+
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      background: var(--noir-2);
+      border: 1px solid rgba(245,240,235,0.08);
+      border-radius: var(--radius);
+      transition: var(--transition);
+    }
+
+    .contact-link:hover {
+      border-color: var(--rouge);
+      transform: translateX(4px);
+    }
+
+    .contact-link-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(204,17,17,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .contact-link-icon svg {
+      width: 20px;
+      height: 20px;
+      color: var(--rouge);
+    }
+
+    .contact-link-info {
+      flex: 1;
+    }
+
+    .contact-link-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gris);
+      margin-bottom: 0.2rem;
+    }
+
+    .contact-link-value {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--creme);
+    }
+
+    .contact-map {
+      background: var(--noir-2);
+      border: 1px solid rgba(245,240,235,0.08);
+      border-radius: var(--radius);
+      padding: 2rem;
+      text-align: center;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .contact-map svg {
+      width: 48px;
+      height: 48px;
+      color: var(--rouge);
+      margin-bottom: 1rem;
+    }
+
+    .contact-map h3 {
+      font-family: var(--font-logo);
+      font-size: 1.5rem;
+      color: var(--creme);
+      margin-bottom: 0.5rem;
+    }
+
+    .contact-map p {
+      font-size: 0.8rem;
+      color: var(--gris);
+      line-height: 1.6;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: #080808;
+      border-top: 1px solid rgba(204,17,17,0.2);
+      padding: 2.5rem 2rem;
+    }
+
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .footer-logo .logo-text {
+      font-family: var(--font-logo);
+      font-size: 1.8rem;
+      color: var(--rouge);
+    }
+
+    .footer-logo .logo-sub {
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gris);
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .footer-social a {
+      width: 38px;
+      height: 38px;
+      border: 1px solid rgba(245,240,235,0.15);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+
+    .footer-social a:hover {
+      border-color: var(--rouge);
+      background: rgba(204,17,17,0.1);
+    }
+
+    .footer-social a svg {
+      width: 16px;
+      height: 16px;
+      color: var(--creme-2);
+    }
+
+    .footer-copy {
+      font-size: 0.7rem;
+      color: var(--gris);
+      text-align: right;
+    }
+
+    .footer-copy a { color: var(--rouge); }
+
+    /* ===== CART SIDEBAR ===== */
+    .cart-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 2000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      backdrop-filter: blur(4px);
+    }
+
+    .cart-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .cart-sidebar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 420px;
+      max-width: 100vw;
+      background: #111;
+      border-left: 1px solid rgba(245,240,235,0.08);
+      z-index: 2001;
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cart-sidebar.open {
+      transform: translateX(0);
+    }
+
+    .cart-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem;
+      border-bottom: 1px solid rgba(245,240,235,0.08);
+    }
+
+    .cart-header h2 {
+      font-family: var(--font-logo);
+      font-size: 1.5rem;
+      color: var(--creme);
+    }
+
+    .cart-close {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(245,240,235,0.2);
+      border-radius: 50%;
+      color: var(--creme);
+      font-size: 1.1rem;
+      transition: var(--transition);
+    }
+
+    .cart-close:hover {
+      background: var(--rouge);
+      border-color: var(--rouge);
+    }
+
+    .cart-items {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem 1.5rem;
+    }
+
+    .cart-empty {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--gris);
+    }
+
+    .cart-empty svg {
+      width: 48px;
+      height: 48px;
+      opacity: 0.3;
+      margin: 0 auto 1rem;
+    }
+
+    .cart-empty p {
+      font-size: 0.85rem;
+    }
+
+    .cart-item {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(245,240,235,0.06);
+      align-items: center;
+    }
+
+    .cart-item-info {
+      flex: 1;
+    }
+
+    .cart-item-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+
+    .cart-item-size {
+      font-size: 0.7rem;
+      color: var(--gris);
+      letter-spacing: 0.1em;
+    }
+
+    .cart-item-qty {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .qty-btn {
+      width: 26px;
+      height: 26px;
+      border: 1px solid rgba(245,240,235,0.2);
+      border-radius: 4px;
+      color: var(--creme);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+
+    .qty-btn:hover {
+      border-color: var(--rouge);
+      color: var(--rouge);
+    }
+
+    .qty-value {
+      font-size: 0.85rem;
+      font-weight: 600;
+      min-width: 20px;
+      text-align: center;
+    }
+
+    .cart-item-price {
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--creme);
+      text-align: right;
+    }
+
+    .cart-item-remove {
+      color: rgba(245,240,235,0.3);
+      font-size: 0.8rem;
+      margin-top: 0.25rem;
+      display: block;
+      transition: var(--transition);
+    }
+
+    .cart-item-remove:hover {
+      color: var(--rouge);
+    }
+
+    .cart-footer {
+      border-top: 1px solid rgba(245,240,235,0.08);
+      padding: 1.5rem;
+    }
+
+    .cart-message {
+      width: 100%;
+      background: var(--noir-2);
+      border: 1px solid rgba(245,240,235,0.1);
+      border-radius: var(--radius);
+      padding: 0.75rem;
+      color: var(--creme);
+      font-family: var(--font-text);
+      font-size: 0.8rem;
+      resize: none;
+      margin-bottom: 1rem;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .cart-message:focus {
+      border-color: rgba(204,17,17,0.4);
+    }
+
+    .cart-message::placeholder { color: var(--gris); }
+
+    .cart-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .cart-total-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gris);
+    }
+
+    .cart-total-value {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--creme);
+    }
+
+    .whatsapp-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      background: #25D366;
+      color: white;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 1rem;
+      border-radius: var(--radius);
+      transition: var(--transition);
+    }
+
+    .whatsapp-btn:hover {
+      background: #1db954;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(37,211,102,0.3);
+    }
+
+    .whatsapp-btn svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .cart-disabled-msg {
+      text-align: center;
+      color: var(--gris);
+      font-size: 0.75rem;
+      padding: 1rem;
+    }
+
+    /* ===== TOAST ===== */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--noir-2);
+      border: 1px solid rgba(204,17,17,0.3);
+      border-left: 3px solid var(--rouge);
+      color: var(--creme);
+      font-size: 0.82rem;
+      padding: 0.85rem 1.25rem;
+      border-radius: var(--radius);
+      z-index: 3000;
+      transform: translateX(120%);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      max-width: 300px;
+      box-shadow: var(--shadow);
+    }
+
+    .toast.show {
+      transform: translateX(0);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 900px) {
+      .steps-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .step::after { display: none; }
+
+      .histoire-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .histoire-visual { display: none; }
+    }
+
+    @media (max-width: 768px) {
+      .nav { display: none; }
+      .hamburger { display: flex; }
+
+      .header { padding: 0 1rem; }
+
+      .produits-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .footer-copy { text-align: center; }
+
+      .cart-sidebar { width: 100vw; }
+
+      .steps-grid { grid-template-columns: 1fr; gap: 1rem; }
+
+      .hero-badges { gap: 1rem; }
+
+      .section { padding: 3.5rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="header" id="header">
+  <a href="#accueil" class="header-logo">
+    <span class="logo-text">Képaru Noreyni</span>
+    <span class="logo-sub">Chicory — Sénégal</span>
+  </a>
+
+  <nav class="nav" id="desktop-nav">
+    <a href="#accueil" class="nav-link">Accueil</a>
+    <a href="#produits" class="nav-link">Produits</a>
+    <a href="#histoire" class="nav-link">Histoire</a>
+    <a href="#contact" class="nav-link">Contact</a>
+  </nav>
+
+  <div class="header-actions">
+    <button class="cart-btn" onclick="openCart()" aria-label="Ouvrir le panier">
+      <svg class="cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+      </svg>
+      Panier
+      <span id="cart-count">0</span>
+    </button>
+
+    <button class="hamburger" id="hamburger" onclick="toggleMobileNav()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- Mobile Nav -->
+<nav class="mobile-nav" id="mobile-nav">
+  <a href="#accueil" onclick="closeMobileNav()">Accueil</a>
+  <a href="#produits" onclick="closeMobileNav()">Produits</a>
+  <a href="#histoire" onclick="closeMobileNav()">Histoire</a>
+  <a href="#contact" onclick="closeMobileNav()">Contact</a>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="accueil">
+  <div class="hero-damier"></div>
+  <div class="hero-glow"></div>
+
+  <div class="hero-content">
+    <div class="hero-tag">✦ Drop 01 — Chicory Origins</div>
+    <h1 class="hero-title">Képaru<br>Noreyni</h1>
+    <p class="hero-tagline">From Chicory to the world.</p>
+    <a href="#produits" class="hero-cta">
+      Commander maintenant
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </a>
+
+    <div class="hero-badges">
+      <span class="hero-badge"><span>✓</span> Livraison Sénégal</span>
+      <span class="hero-badge"><span>✓</span> Wave</span>
+      <span class="hero-badge"><span>✓</span> Orange Money</span>
+      <span class="hero-badge"><span>✓</span> Qualité premium</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PRODUITS ===== -->
+<section class="section section-produits" id="produits">
+  <div class="container">
+    <div class="produits-header fade-in">
+      <div class="drop-badge">
+        <svg width="14" height="10" viewBox="0 0 14 10">
+          <rect width="4" height="5" fill="#CC1111"/><rect x="4" width="4" height="5" fill="#0d0d0d"/>
+          <rect x="8" width="4" height="5" fill="#CC1111"/><rect width="4" y="5" height="5" fill="#0d0d0d"/>
+          <rect x="4" y="5" width="4" height="5" fill="#CC1111"/><rect x="8" y="5" width="4" height="5" fill="#0d0d0d"/>
+        </svg>
+        Drop 01 — Chicory Origins
+      </div>
+      <h2 class="section-title">Nos Pièces</h2>
+      <p class="section-sub">Chaque t-shirt est une déclaration. Fabriqué pour ceux qui viennent de quelque part et veulent que le monde le sache.</p>
+    </div>
+
+    <div class="produits-grid">
+
+      <!-- T-SHIRT NOIR -->
+      <div class="product-card fade-in" id="product-noir">
+        <div class="product-img-wrap">
+          <img class="product-img-front" src="images/tshirt-noir-front.jpg" alt="T-Shirt Noir Képaru Noreyni — Face avant" loading="lazy">
+          <img class="product-img-back" src="images/tshirt-noir-back.jpg" alt="T-Shirt Noir Képaru Noreyni — Face arrière" loading="lazy">
+          <span class="flip-hint">Survoler → Dos</span>
+        </div>
+        <div class="product-info">
+          <h3 class="product-name">T-Shirt Noir</h3>
+          <p class="product-desc">Chicory Origins — Drop 01</p>
+
+          <p class="size-label">Taille</p>
+          <div class="size-btns" data-product="noir">
+            <button class="size-btn" data-size="S">S</button>
+            <button class="size-btn" data-size="M">M</button>
+            <button class="size-btn" data-size="L">L</button>
+            <button class="size-btn" data-size="XL">XL</button>
+            <button class="size-btn" data-size="XXL">XXL</button>
+          </div>
+
+          <div class="product-footer">
+            <div class="product-price">
+              10 000 <small>FCFA</small>
+            </div>
+            <button class="add-btn" onclick="addToCart('noir', 'T-Shirt Noir')">
+              + Ajouter
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- T-SHIRT BLANC -->
+      <div class="product-card fade-in" id="product-blanc">
+        <div class="product-img-wrap">
+          <img class="product-img-front" src="images/tshirt-blanc-front.jpg" alt="T-Shirt Blanc Képaru Noreyni — Face avant" loading="lazy">
+          <img class="product-img-back" src="images/tshirt-blanc-back.jpg" alt="T-Shirt Blanc Képaru Noreyni — Face arrière" loading="lazy">
+          <span class="flip-hint">Survoler → Dos</span>
+        </div>
+        <div class="product-info">
+          <h3 class="product-name">T-Shirt Blanc</h3>
+          <p class="product-desc">Chicory Origins — Drop 01</p>
+
+          <p class="size-label">Taille</p>
+          <div class="size-btns" data-product="blanc">
+            <button class="size-btn" data-size="S">S</button>
+            <button class="size-btn" data-size="M">M</button>
+            <button class="size-btn" data-size="L">L</button>
+            <button class="size-btn" data-size="XL">XL</button>
+            <button class="size-btn" data-size="XXL">XXL</button>
+          </div>
+
+          <div class="product-footer">
+            <div class="product-price">
+              10 000 <small>FCFA</small>
+            </div>
+            <button class="add-btn" onclick="addToCart('blanc', 'T-Shirt Blanc')">
+              + Ajouter
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== HISTOIRE ===== -->
+<section class="section section-histoire" id="histoire">
+  <svg class="histoire-damier" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <pattern id="damier" width="30" height="30" patternUnits="userSpaceOnUse">
+        <rect width="15" height="15" fill="#CC1111"/>
+        <rect x="15" y="15" width="15" height="15" fill="#CC1111"/>
+      </pattern>
+    </defs>
+    <rect width="300" height="300" fill="url(#damier)"/>
+  </svg>
+
+  <div class="container">
+    <div class="histoire-content">
+      <div class="histoire-text fade-in">
+        <span class="section-tag">Notre Histoire</span>
+        <h2 class="section-title">Né à Chicory.<br>Fait pour le monde.</h2>
+
+        <p>Képaru Noreyni est né dans les rues de Chicory, un quartier de Dakar où l'identité se porte autant qu'elle se vit. Ce n'est pas juste une marque de vêtements — c'est une déclaration d'appartenance.</p>
+
+        <p>Le drapeau damier rouge et noir est notre symbole. Il représente la dualité : l'ombre et la lumière, la rue et l'ambition, les racines et l'horizon. Ceux qui portent Képaru Noreyni savent d'où ils viennent et où ils vont.</p>
+
+        <p>DROP 01 — <em>Chicory Origins</em> — est le commencement. Deux t-shirts, une vision, un message : <strong>Chicory est sur la carte.</strong></p>
+
+        <blockquote class="histoire-quote">
+          <p>"Ce n'est pas juste un vêtement. C'est un symbole."</p>
+          <cite>— Képaru Noreyni, Chicory, Sénégal</cite>
+        </blockquote>
+      </div>
+
+      <div class="histoire-visual fade-in">
+        <svg class="damier-deco" viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="damier2" width="35" height="35" patternUnits="userSpaceOnUse">
+              <rect width="17.5" height="17.5" fill="#CC1111" opacity="0.8"/>
+              <rect x="17.5" y="17.5" width="17.5" height="17.5" fill="#CC1111" opacity="0.8"/>
+            </pattern>
+            <radialGradient id="vignette" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="transparent"/>
+              <stop offset="100%" stop-color="#0d0d0d"/>
+            </radialGradient>
+          </defs>
+          <rect width="280" height="280" fill="url(#damier2)"/>
+          <rect width="280" height="280" fill="url(#vignette)"/>
+          <text x="140" y="150" text-anchor="middle" font-family="serif" font-size="28" fill="#f5f0eb" opacity="0.9" font-style="italic">Képaru Noreyni</text>
+          <text x="140" y="175" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#CC1111" letter-spacing="3">CHICORY · SÉNÉGAL</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== COMMENT COMMANDER ===== -->
+<section class="section section-commander" id="commander">
+  <div class="container">
+    <div class="produits-header fade-in">
+      <span class="section-tag">Simple &amp; rapide</span>
+      <h2 class="section-title">Comment Commander</h2>
+      <p class="section-sub">En 4 étapes, ton t-shirt est en chemin.</p>
+    </div>
+
+    <div class="steps-grid">
+      <div class="step fade-in">
+        <div class="step-num">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+        </div>
+        <h3>1. Choisir</h3>
+        <p>Sélectionne ton t-shirt (noir ou blanc) et ta taille parmi S, M, L, XL, XXL.</p>
+      </div>
+
+      <div class="step fade-in">
+        <div class="step-num">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+          </svg>
+        </div>
+        <h3>2. Panier</h3>
+        <p>Ajoute au panier. Tu peux commander plusieurs articles en même temps.</p>
+      </div>
+
+      <div class="step fade-in">
+        <div class="step-num">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+          </svg>
+        </div>
+        <h3>3. WhatsApp</h3>
+        <p>Clique "Commander via WhatsApp". Un message pré-rempli est envoyé automatiquement.</p>
+      </div>
+
+      <div class="step fade-in">
+        <div class="step-num">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+            <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+          </svg>
+        </div>
+        <h3>4. Livraison</h3>
+        <p>On confirme ta commande et on organise la livraison partout au Sénégal.</p>
+      </div>
+    </div>
+
+    <div class="paiement-section fade-in">
+      <p class="paiement-label">Moyens de paiement acceptés</p>
+      <div class="paiement-badges">
+        <span class="paiement-badge">📱 Wave</span>
+        <span class="paiement-badge">📱 Orange Money</span>
+        <span class="paiement-badge">💵 Espèces</span>
+        <span class="paiement-badge">🏦 Virement</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONTACT ===== -->
+<section class="section section-contact" id="contact">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="fade-in">
+        <span class="section-tag">Nous contacter</span>
+        <h2 class="section-title">On est là<br>pour toi.</h2>
+        <p class="section-sub">Une question sur la taille, la livraison ou un drop à venir ? Écris-nous directement.</p>
+
+        <div class="contact-links">
+          <a href="https://wa.me/221787660827" target="_blank" rel="noopener noreferrer" class="contact-link">
+            <div class="contact-link-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+              </svg>
+            </div>
+            <div class="contact-link-info">
+              <div class="contact-link-label">WhatsApp</div>
+              <div class="contact-link-value">+221 78 766 08 27</div>
+            </div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.3">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+
+          <a href="https://instagram.com/keparunoreyni" target="_blank" rel="noopener noreferrer" class="contact-link">
+            <div class="contact-link-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+              </svg>
+            </div>
+            <div class="contact-link-info">
+              <div class="contact-link-label">Instagram</div>
+              <div class="contact-link-value">@keparunoreyni</div>
+            </div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.3">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+
+          <div class="contact-link">
+            <div class="contact-link-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+            </div>
+            <div class="contact-link-info">
+              <div class="contact-link-label">Localisation</div>
+              <div class="contact-link-value">Chicory, Dakar — Sénégal</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-map fade-in">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+          <circle cx="12" cy="10" r="3"/>
+        </svg>
+        <h3>Chicory</h3>
+        <p>Dakar, Sénégal<br><br>La marque naît ici.<br>Le monde nous attend.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">
+      <div class="logo-text">Képaru Noreyni</div>
+      <div class="logo-sub">Chicory — Sénégal · Drop 01</div>
+    </div>
+
+    <div class="footer-social">
+      <a href="https://wa.me/221787660827" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+        </svg>
+      </a>
+      <a href="https://instagram.com/keparunoreyni" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+        </svg>
+      </a>
+    </div>
+
+    <div class="footer-copy">
+      <p>&copy; 2026 <a href="#">Képaru Noreyni</a> — LeM2003</p>
+      <p style="margin-top:0.25rem; font-size:0.6rem; opacity:0.5;">From Chicory to the world.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== CART OVERLAY ===== -->
+<div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
+
+<!-- ===== CART SIDEBAR ===== -->
+<div class="cart-sidebar" id="cart-sidebar" role="dialog" aria-label="Panier">
+  <div class="cart-header">
+    <h2>Mon Panier</h2>
+    <button class="cart-close" onclick="closeCart()" aria-label="Fermer le panier">✕</button>
+  </div>
+
+  <div class="cart-items" id="cart-items">
+    <!-- rempli par JS -->
+  </div>
+
+  <div class="cart-footer" id="cart-footer">
+    <!-- rempli par JS -->
+  </div>
+</div>
+
+<!-- ===== TOAST ===== -->
+<div class="toast" id="toast" role="alert"></div>
+
+<!-- ===== JAVASCRIPT ===== -->
+<script>
+'use strict';
+
+let cart = [];
+const PRICE = 10000;
+const WA_NUMBER = '221787660827';
+
+function fmt(n) {
+  return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+}
+
+let toastTimer;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+function renderCart() {
+  const itemsEl = document.getElementById('cart-items');
+  const footerEl = document.getElementById('cart-footer');
+  const countEl = document.getElementById('cart-count');
+  const total = cart.reduce((s, i) => s + i.qty, 0);
+  countEl.textContent = total;
+  countEl.classList.toggle('visible', total > 0);
+
+  if (cart.length === 0) {
+    itemsEl.innerHTML = `
+      <div class="cart-empty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+        </svg>
+        <p>Ton panier est vide.<br>Ajoute un t-shirt !</p>
+      </div>`;
+    footerEl.innerHTML = '<p class="cart-disabled-msg">Ajoute un article pour commander.</p>';
+    return;
+  }
+
+  itemsEl.innerHTML = cart.map((item, i) => `
+    <div class="cart-item">
+      <div class="cart-item-info">
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-size">Taille : ${item.size}</div>
+        <div class="cart-item-qty">
+          <button class="qty-btn" onclick="updateQty(${i}, -1)">−</button>
+          <span class="qty-value">${item.qty}</span>
+          <button class="qty-btn" onclick="updateQty(${i}, 1)">+</button>
+        </div>
+      </div>
+      <div>
+        <div class="cart-item-price">${fmt(item.price * item.qty)} FCFA</div>
+        <button class="cart-item-remove" onclick="removeFromCart(${i})">Retirer</button>
+      </div>
+    </div>`).join('');
+
+  const totalPrice = cart.reduce((s, i) => s + i.price * i.qty, 0);
+
+  footerEl.innerHTML = `
+    <textarea class="cart-message" id="cart-message" rows="2"
+      placeholder="Message optionnel (taille de remplacement, adresse, note…)"></textarea>
+    <div class="cart-total">
+      <span class="cart-total-label">Total</span>
+      <span class="cart-total-value">${fmt(totalPrice)} FCFA</span>
+    </div>
+    <button class="whatsapp-btn" onclick="orderWhatsApp()">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
+      </svg>
+      Commander via WhatsApp
+    </button>`;
+}
+
+function addToCart(productId, productName) {
+  const group = document.querySelector(`.size-btns[data-product="${productId}"]`);
+  const selected = group.querySelector('.size-btn.selected');
+
+  if (!selected) {
+    const addBtn = document.querySelector(`#product-${productId} .add-btn`);
+    addBtn.classList.remove('shake');
+    void addBtn.offsetWidth;
+    addBtn.classList.add('shake');
+    showToast('⚠️ Sélectionne une taille d\'abord !');
+    return;
+  }
+
+  const size = selected.dataset.size;
+  const existing = cart.find(i => i.id === productId && i.size === size);
+
+  if (existing) {
+    existing.qty++;
+  } else {
+    cart.push({ id: productId, name: productName, size, price: PRICE, qty: 1 });
+  }
+
+  renderCart();
+  showToast(`✓ ${productName} (${size}) ajouté au panier`);
+}
+
+function removeFromCart(index) {
+  cart.splice(index, 1);
+  renderCart();
+}
+
+function updateQty(index, delta) {
+  cart[index].qty = Math.max(1, cart[index].qty + delta);
+  renderCart();
+}
+
+function orderWhatsApp() {
+  if (cart.length === 0) return;
+
+  const msg = document.getElementById('cart-message');
+  const note = msg ? msg.value.trim() : '';
+
+  let lines = ['Bonjour 👋 je voudrais commander :\n'];
+  cart.forEach(item => {
+    lines.push(`• ${item.name} — Taille ${item.size} × ${item.qty} = ${fmt(item.price * item.qty)} FCFA`);
+  });
+  const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  lines.push(`\n*Total : ${fmt(total)} FCFA*`);
+  if (note) lines.push(`\nNote : ${note}`);
+  lines.push('\nMerci !');
+
+  const text = encodeURIComponent(lines.join('\n'));
+  window.open(`https://wa.me/${WA_NUMBER}?text=${text}`, '_blank');
+}
+
+function openCart() {
+  document.getElementById('cart-sidebar').classList.add('open');
+  document.getElementById('cart-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCart() {
+  document.getElementById('cart-sidebar').classList.remove('open');
+  document.getElementById('cart-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.querySelectorAll('.size-btns').forEach(group => {
+  group.querySelectorAll('.size-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      group.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+    });
+  });
+});
+
+function toggleMobileNav() {
+  document.getElementById('hamburger').classList.toggle('active');
+  document.getElementById('mobile-nav').classList.toggle('open');
+  document.body.style.overflow = document.getElementById('mobile-nav').classList.contains('open') ? 'hidden' : '';
+}
+
+function closeMobileNav() {
+  document.getElementById('hamburger').classList.remove('active');
+  document.getElementById('mobile-nav').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+window.addEventListener('scroll', () => {
+  document.getElementById('header').classList.toggle('scrolled', window.scrollY > 20);
+}, { passive: true });
+
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-link');
+
+const spyObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + entry.target.id);
+      });
+    }
+  });
+}, { threshold: 0.4 });
+
+sections.forEach(s => spyObserver.observe(s));
+
+const fadeObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      fadeObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.fade-in').forEach(el => fadeObserver.observe(el));
+
+renderCart();
+</script>
+</body>
+</html>
