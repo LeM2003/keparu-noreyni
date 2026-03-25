@@ -1272,10 +1272,54 @@
       .hero-badges { gap: 1rem; }
 
       .section { padding: 3.5rem 1.25rem; }
+    .banniere { font-size: 0.7rem; }
+    }
+
+    /* ===== BANNIÈRE ===== */
+    .banniere {
+      background: var(--rouge);
+      color: white;
+      text-align: center;
+      padding: 8px 1rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .banniere-inner {
+      display: inline-block;
+      animation: defilement 18s linear infinite;
+    }
+
+    @media (min-width: 768px) {
+      .banniere-inner { animation: none; }
+    }
+
+    @keyframes defilement {
+      0%   { transform: translateX(100vw); }
+      100% { transform: translateX(-100%); }
+    }
+
+    /* ===== ANIMATION LOGO HERO ===== */
+    .hero-logo-anim {
+      animation: logoApparition 0.9s ease both;
+    }
+
+    @keyframes logoApparition {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
+
+<!-- ===== BANNIÈRE ===== -->
+<div class="banniere">
+  <span class="banniere-inner">Livraison partout au Sénégal &nbsp;·&nbsp; Paiement Wave &amp; Orange Money &nbsp;·&nbsp; Livraison partout au Sénégal &nbsp;·&nbsp; Paiement Wave &amp; Orange Money</span>
+</div>
 
 <!-- ===== HEADER ===== -->
 <header class="header" id="header">
@@ -1320,7 +1364,7 @@
   <div class="hero-glow"></div>
 
   <div class="hero-content">
-    <img src="images/Logo .jpeg" alt="Képaru Noreyni" style="height:110px;width:auto;object-fit:contain;margin:0 auto 1.5rem;display:block;filter:drop-shadow(0 4px 20px rgba(204,17,17,0.4));">
+    <img src="images/Logo .jpeg" alt="Képaru Noreyni" class="hero-logo-anim" style="height:110px;width:auto;object-fit:contain;margin:0 auto 1.5rem;display:block;filter:drop-shadow(0 4px 20px rgba(204,17,17,0.4));">
     <div class="hero-tag">✦ Drop 01 — Chicory Origins</div>
     <h1 class="hero-title">Képaru<br>Noreyni</h1>
     <p class="hero-tagline">From Chicory to the world.</p>
